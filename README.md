@@ -103,9 +103,78 @@ metadata:
   name: mariadb-external
 spec:
   type: LoadBalancer
+```
+# mariadb-galera-statefulset.yaml
+```
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mariadb-galera
+spec:
+  serviceName: mariadb-galera
+  replicas: 3
+  selector:
+    matchLabels:
+      app: mariadb-galera
+  template:
+    metadata:
+      labels:
+        app: mariadb-galera
+    spec:
+      containers:
+      - name: mariadb
+        image: mariadb:galera
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: your-root-password
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        - name: mariadb-persistent-storage
+          mountPath: /var/lib/mysql
+  volumeClaimTemplates:
+  - metadata:
+      name: mariadb-persistent-storage
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      storageClassName: your-storage-class
+      resources:
+        requests:
+          storage: 1Gi
+```
+# mariadb-galera-service.yaml
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: mariadb-galera
+spec:
+  clusterIP: None
+  ports:
+  - port: 3306
+    name: mysql
+  selector:
+    app: mariadb-galera
+```
+# mariadb-galera-service-external.yaml
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: mariadb-galera-external
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 3306
+    name: mysql
+  selector:
+    app: mariadb-galera
+
   ports:
   - port: 3306
     name: mysql
   selector:
     app: mariadb
 ```
+
