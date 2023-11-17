@@ -1,4 +1,4 @@
-To deploy a MariaDB cluster on Kubernetes with high availability and data synchronization, you can use StatefulSets along with a persistent storage solution and an operator like the MariaDB Operator. Below is a set of YAML files and a brief description of the approach.
+To achieve a highly available MariaDB cluster on Kubernetes with data synchronization and automatic reconnection for clients, i am showing an example of the Galera Cluster. allowing all nodes to be both read and write nodes. Below are the YAML files and a brief description of the approach
 
 Approach:
 Create Persistent Volumes (PVs) and Persistent Volume Claims (PVCs):
